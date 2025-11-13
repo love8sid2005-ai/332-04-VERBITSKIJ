@@ -1,0 +1,31 @@
+@startuml
+actor Пользователь
+participant "Веб-интерфейс" as UI
+participant "Контроллер" as Controller
+participant "Сервис курсов" as Service
+participant "Внешний API" as API
+participant "База данных" as DB
+
+Пользователь -> UI: Запрос конвертации валют
+UI -> Controller: POST /convert
+Controller -> Service: convertCurrency(100, "USD", "EUR")
+Service -> DB: getCurrentRate("USD", "EUR")
+DB --> Service: возвращает курс 0.85
+Service -> Controller: результат конвертации
+Controller -> UI: отображает результат
+UI -> Пользователь: 100 USD = 85 EUR
+
+Пользователь -> UI: Настройка уведомления
+UI -> Controller: POST /notifications
+Controller -> Service: setNotification("USD", "EUR", 0.9)
+Service -> DB: сохранить уведомление
+DB --> Service: подтверждение
+Service -> Controller: уведомление создано
+Controller -> UI: отображает успех
+UI -> Пользователь: "Уведомление установлено"
+
+Service -> API: запрос обновления курсов
+API --> Service: JSON с курсами валют
+Service -> DB: обновить курсы валют
+DB --> Service: подтверждение
+@enduml
