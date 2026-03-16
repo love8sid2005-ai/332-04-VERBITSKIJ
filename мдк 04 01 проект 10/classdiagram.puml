@@ -1,0 +1,44 @@
+@startuml
+skinparam {
+  BackgroundColor #2F4F4F
+  ClassBackgroundColor #87CEEB-4682B4
+  ClassBorderColor #FFFFFF
+  ArrowColor #FFFFFF
+  FontColor #FFFFFF
+}
+
+class "Пользователь" as User {
+  id: UUID
+  имя: string
+  email: string
+  премиум: boolean
+}
+
+class "Валютная пара" as CurrencyPair {
+  базоваяВалюта: string
+  целеваяВалюта: string
+  символ: string
+}
+
+class "Котировка" as Quote {
+  курс: decimal
+  временнаяМетка: DateTime
+}
+
+class "Конвертер" as Converter {
+  конвертировать()
+  получитьКроссКурсы()
+}
+
+class "API клиент" as APIClient {
+  получитьДанные()
+}
+
+' Связи
+User --> Quote
+CurrencyPair --> Quote
+Converter --> Quote
+Converter --> CurrencyPair
+APIClient --> Quote
+
+@enduml

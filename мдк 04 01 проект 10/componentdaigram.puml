@@ -1,0 +1,50 @@
+@startuml
+package "Система курсов валют" {
+
+  [Веб-интерфейс] as UI
+  [Мобильное приложение] as Mobile
+  [API Gateway] as Gateway
+  
+  package "Бизнес-логика" {
+    [Сервис конвертации] as Converter
+    [Сервис уведомлений] as Notifier
+    [Сервис данных] as DataService
+  }
+  
+  package "Хранение данных" {
+    [База данных\nкурсов] as RatesDB
+    [База данных\nпользователей] as UsersDB
+    [Кэш] as Cache
+  }
+  
+  package "Внешние системы" {
+    [ЦБ РФ API] as CBR
+    [Forex API] as Forex
+    [Email Service] as Email
+    [Push Service] as Push
+  }
+}
+
+UI --> Gateway
+Mobile --> Gateway
+Gateway --> Converter
+Gateway --> Notifier
+Gateway --> DataService
+
+Converter --> DataService
+Notifier --> DataService
+DataService --> RatesDB
+DataService --> UsersDB
+DataService --> Cache
+
+DataService --> CBR
+DataService --> Forex
+Notifier --> Email
+Notifier --> Push
+
+note right of DataService
+  Получает данные из
+  внешних источников
+  и обновляет БД
+end note
+@enduml
